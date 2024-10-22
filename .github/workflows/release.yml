@@ -7,7 +7,7 @@ on:
     types: [ released ]
 
 permissions:
-  contents: read # default permission for the repository
+  contents: write # default permission for the repository
 
 jobs:
   create-release:
