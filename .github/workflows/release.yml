@@ -1,0 +1,33 @@
+name: Create a release
+
+on:
+  # allow manual trigger
+  workflow_dispatch:
+  release:
+    types: [ released ]
+
+permissions:
+  contents: read # default permission for the repository
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: create artifact
+        run: |
+          echo "Hello, world" > file.txt
+          TXT_FILE=$(find . -type f -name "*.txt" | head -n 1)
+          echo "ARTIFACT_PATH=${TXT_FILE}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=file.txt" >> $GITHUB_ENV
+
+      - name: upload artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ env.ARTIFACT_PATH }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_content_type: text/plain
