@@ -1,0 +1,28 @@
+name: CI Merge Queue
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  cheap-job:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_queue'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run cheap job
+        run: echo "Running cheap job"
+
+  expensive-job:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'merge_queue'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run expensive job
+        run: echo "Running expensive job"
